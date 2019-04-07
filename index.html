@@ -13,38 +13,107 @@
     <h3>Location of the Berry</h3>
     <!--The div element for the map -->
     <div id="map"></div>
+
+    
     <script>
 // Initialize and add the map
-function initMap() {
+
+
+
+function initMap(uluru) {
   // The location of Uluru
-  var uluru = {lat: 40.249416, lng: -111.650791};
   // The map, centered at Uluru
+  /*
+  if(ulurus == null) {
+    return;
+  }*/
   var map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 15, center: uluru});
+      document.getElementById('map'), {zoom: 15, center:uluru});
   // The marker, positioned at Uluru
+  let code = null;
+/*
+  for (let i = 0; i < 2; i++) {
+    for (let j = 0; j < 3; j++) {
+  let uluru = ulurus[i][j];
+  if (j === 0) {
+    code = uluru[i][j];
+  }*/
   var marker = new google.maps.Marker({position: uluru, map: map});
+  marker.addListener('click', function() {
+    map.setCenter(marker.getPosition());
+    infowindow.open(map, marker);
+  });
+  var infowindow = new google.maps.InfoWindow({
+      content: GetCodeContent()
+    });
 }
+ 
+
+
     </script>
-    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-auth.js"></script>
-    <script src="https://cdn.firebase.com/libs/firebaseui/3.0.0/firebaseui.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-database.js"></script>
-    <script>
-      var config = {
-      apiKey: "AIzaSyCQNr5aC65hCelDZgqg5PinzxLHI2LGBsg",
-      authDomain: "newproj-79b8b.firebaseapp.com",
-      databaseURL: "https://newproj-79b8b.firebaseio.com",
-      projectId: "newproj-79b8b",
-      storageBucket: "<BUCKET>.appspot.com",
-      messagingSenderId: "<SENDER_ID>",
-    };
-    firebase.initializeApp(config);
+    
+
+
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
+
+
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCQNr5aC65hCelDZgqg5PinzxLHI2LGBsg",
+    authDomain: "newproj-79b8b.firebaseapp.com",
+    databaseURL: "https://newproj-79b8b.firebaseio.com",
+    projectId: "newproj-79b8b",
+    storageBucket: "newproj-79b8b.appspot.com",
+    messagingSenderId: "549801987733"
+  };
+  firebase.initializeApp(config);
+</script>
+
+
+ <script>
+ var database = firebase.database();
+  var locationRef = database.ref().child("Locations/Travis' Phone");
+  var code;
+  
+  locationRef.on("value", function(snapshot){
+    console.log(snapshot.val());
+    
+    var longitude = snapshot.val().Longitude;
+    var latitude = snapshot.val().Latitude;
+    code = snapshot.val().Code;
+
+    initMap({lat:latitude, lng: longitude});
+  }, function (error) {
+    console.log("Error" + error.code);
+  });
+  
+ /*
+ locationRef.on('value', function(snapshot) {
+   let snap = snapshot.val();
+   var ulurus = [];
+
+   for (i in snap) {
+     ulurus[i] = [];
+     for (j in snap[i]) {
+       ulurus[i].push(snap[i][j]);
+       //console.log(snap[i][j]);
+     }
+   }
+   initMap(ulurus);
+ });
+*/
+ 
+  function GetCodeContent() {
+      return code;
+    }
     </script>
+
 
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9S9cy0E2YJetCWEXp9z91mpncZNILnh4&callback=initMap">
     </script>
-    <script src="retrieveData.js"></script>
-
   </body>
 </html>
