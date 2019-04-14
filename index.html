@@ -20,33 +20,65 @@
 
 
 
-function initMap(uluru) {
+function initMap(ulurus) {
   // The location of Uluru
   // The map, centered at Uluru
-  /*
+  
   if(ulurus == null) {
     return;
-  }*/
+  }
   var map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 15, center:uluru});
+      document.getElementById('map'), {zoom: 12, center: {lat:40.2518,lng:-111.6493}});
   // The marker, positioned at Uluru
   let code = null;
-/*
-  for (let i = 0; i < 2; i++) {
-    for (let j = 0; j < 3; j++) {
-  let uluru = ulurus[i][j];
+  let lati = null;
+  let long = null;
+  let title = null;
+  for (let i = 0; i < ulurus.length; i++) {
+    for (let j = 0; j < ulurus[i].length; j++) {
+    let uluru = ulurus[i][j];
   if (j === 0) {
-    code = uluru[i][j];
-  }*/
-  var marker = new google.maps.Marker({position: uluru, map: map});
+    code = uluru;
+  }
+  if (j === 1) {
+    lati = uluru;
+  }
+  if (j === 2) {
+    long = uluru;
+  }
+  if (j === 3) {
+    title = uluru;
+  }
+  
+    }
+    let marker = new google.maps.Marker(
+      {position: {lat:lati,lng: long},
+       map: map, 
+       title: title,
+       store_code: code
+      });
   marker.addListener('click', function() {
+    
     map.setCenter(marker.getPosition());
-    infowindow.open(map, marker);
+    addInfoWindow(marker, marker.get('store_code'));
   });
-  var infowindow = new google.maps.InfoWindow({
-      content: GetCodeContent()
-    });
+  function addInfoWindow(marker, message) {
+
+var infoWindow = new google.maps.InfoWindow({
+    content: message
+});
+
+    infoWindow.open(map, marker);
+
+  };
+ 
 }
+  /*
+  var infowindow = new google.maps.InfoWindow({
+    
+      content: marker.get('store_code')
+    });*/
+};
  
 
 
@@ -75,40 +107,47 @@ function initMap(uluru) {
 
  <script>
  var database = firebase.database();
-  var locationRef = database.ref().child("Locations/Travis' Phone");
+  var locationRef = database.ref().child("Locations");
   var code;
-  
-  locationRef.on("value", function(snapshot){
-    console.log(snapshot.val());
-    
-    var longitude = snapshot.val().Longitude;
-    var latitude = snapshot.val().Latitude;
-    code = snapshot.val().Code;
-
-    initMap({lat:latitude, lng: longitude});
-  }, function (error) {
-    console.log("Error" + error.code);
-  });
-  
- /*
+ 
  locationRef.on('value', function(snapshot) {
    let snap = snapshot.val();
+   let length = snapshot.numChildren();
    var ulurus = [];
-
+   let rowCounter = 0;
+  
    for (i in snap) {
-     ulurus[i] = [];
-     for (j in snap[i]) {
-       ulurus[i].push(snap[i][j]);
-       //console.log(snap[i][j]);
-     }
+    let counter = 0;
+     ulurus[rowCounter] = [];
+    for (n in snap[i]) {
+      ulurus[rowCounter][counter] = snap[i][n];
+      counter++;
+    }
+    ulurus[rowCounter].push(i);
+    rowCounter++;
    }
+   
+
    initMap(ulurus);
  });
-*/
+
  
-  function GetCodeContent() {
-      return code;
-    }
+  function GetCodeContent(title) {
+   locationRef.on('value', function(snapshot) {
+   let snap = snapshot.val();
+   let length = snapshot.numChildren();
+   var ulurus = [];
+   let rowCounter = 0;
+  console.log(title);
+   for (let i = 0;  i < length; i++) {
+     if (title == snap[i]) {
+       return snap[i][0];
+     }
+   }
+   
+ });
+  };
+    
     </script>
 
 
