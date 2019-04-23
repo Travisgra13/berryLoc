@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      /* Set the size of the div element that contains the map */
-      #map {
-        height: 400px;  /* The height is 400 pixels */
-        width: 100%;  /* The width is the width of the web page */
-       }
-    </style>
-  </head>
+      <link rel="stylesheet" href="./styles.css">
+      </head>
   <body>
     <h3>Location of the Berry</h3>
     <!--The div element for the map -->
     <div id="map"></div>
+    <div id="code">
+        <h1 v-if=!markerIsClicked>Click A Marker to Modify Code for a Widget</h1>
+        <form @submit.prevent="addNewCode">
+      <textarea v-model="code" rows="25" cols="188"></textarea>
+      <button type="submit"  v-if= markerIsClicked>Submit</button>
+    </form>
+    </div>
 
     
     <script>
@@ -28,7 +29,7 @@ function initMap(ulurus) {
     return;
   }
   var map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 12, center: {lat:40.2518,lng:-111.6493}});
+      document.getElementById('map'), {zoom: 13, center: {lat:40.2518,lng:-111.6493}});
   // The marker, positioned at Uluru
   let code = null;
   let lati = null;
@@ -60,7 +61,12 @@ function initMap(ulurus) {
   marker.addListener('click', function() {
     
     map.setCenter(marker.getPosition());
-    addInfoWindow(marker, marker.get('store_code'));
+    //addInfoWindow(marker, marker.get('store_code'));
+    app.code = marker.get('store_code');
+    app.clickedTitle = marker.get('title');
+    app.markerIsClicked = true;
+    document.getElementById( 'code' ).scrollIntoView();
+
   });
   function addInfoWindow(marker, message) {
 
@@ -112,6 +118,7 @@ var infoWindow = new google.maps.InfoWindow({
  
  locationRef.on('value', function(snapshot) {
    let snap = snapshot.val();
+   console.log(snap);
    let length = snapshot.numChildren();
    var ulurus = [];
    let rowCounter = 0;
@@ -154,5 +161,7 @@ var infoWindow = new google.maps.InfoWindow({
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9S9cy0E2YJetCWEXp9z91mpncZNILnh4&callback=initMap">
     </script>
+
+    <script src= "/retrieveData.js"></script>
   </body>
 </html>

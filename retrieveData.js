@@ -1,14 +1,22 @@
 
 
-
 let app = new Vue({
-  el: '#root',
+  el: '#code',
   data: {
-    location: '',
-    modifiedText:''
+    code:'',
+    clickedTitle:'',
+    markerIsClicked: false
   },
   methods: {
-  } 
-  });
+    addNewCode() {
+      let ref = locationRef.child(this.clickedTitle);//.reference().child("Locations").child(this.clickedTitle);
+      
+      ref.update({
+        "Code": this.code
+      });
+    }
+  },
+ 
+});
 //onChildChangeListener
 
