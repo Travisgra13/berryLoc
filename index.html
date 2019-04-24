@@ -4,7 +4,7 @@
       <link rel="stylesheet" href="./styles.css">
       </head>
   <body>
-    <h3>Location of the Berry</h3>
+    <h1>Widget Locations</h1>
     <!--The div element for the map -->
     <div id="map"></div>
     <div id="code">
@@ -12,7 +12,7 @@
         <h1 v-else>{{this.clickedTitle}}</h1>
         <form @submit.prevent="addNewCode" >
       <textarea v-model="code" rows="25" cols="188"></textarea>
-      <button type="submit"  v-if= markerIsClicked>Submit</button>
+      <button type="submit"  v-if= markerIsClicked>Update Code</button>
     </form>
     </div>
 
