@@ -9,7 +9,9 @@
     <div id="map"></div>
     <div id="code">
         <h1 v-if=!markerIsClicked>Click A Marker to Modify Code for a Widget</h1>
-        <h1 v-else>{{this.clickedTitle}}</h1>
+        <h1 v-else>{{this.clickedTitle}} </br> Type: 
+          {{this.clickedType}}
+        </h1>
         <form @submit.prevent="addNewCode" >
       <textarea v-model="code" rows="25" cols="188"></textarea>
       <button type="submit"  v-if= markerIsClicked>Update Code</button>
@@ -35,6 +37,7 @@ function initMap(ulurus) {
   let code = null;
   let lati = null;
   let long = null;
+  let type = null;
   let title = null;
   for (let i = 0; i < ulurus.length; i++) {
     for (let j = 0; j < ulurus[i].length; j++) {
@@ -49,6 +52,9 @@ function initMap(ulurus) {
     long = uluru;
   }
   if (j === 3) {
+    type = uluru
+  }
+  if (j === 4) {
     title = uluru;
   }
   
@@ -57,6 +63,7 @@ function initMap(ulurus) {
       {position: {lat:lati,lng: long},
        map: map, 
        title: title,
+       store_type: type,
        store_code: code
       });
   marker.addListener('click', function() {
@@ -65,6 +72,7 @@ function initMap(ulurus) {
     //addInfoWindow(marker, marker.get('store_code'));
     app.code = marker.get('store_code');
     app.clickedTitle = marker.get('title');
+    app.clickedType = marker.get('store_type');
     app.markerIsClicked = true;
     document.getElementById( 'code' ).scrollIntoView();
 
@@ -72,7 +80,7 @@ function initMap(ulurus) {
   function addInfoWindow(marker, message) {
 
 var infoWindow = new google.maps.InfoWindow({
-    content: message
+    content: message 
 });
 
     infoWindow.open(map, marker);
@@ -134,6 +142,7 @@ var infoWindow = new google.maps.InfoWindow({
     ulurus[rowCounter].push(i);
     rowCounter++;
    }
+   print(ulurus);
    
 
    initMap(ulurus);

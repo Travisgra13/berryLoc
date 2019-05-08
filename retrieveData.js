@@ -5,6 +5,7 @@ let app = new Vue({
   data: {
     code:'',
     clickedTitle:'',
+    clickedType:'',
     markerIsClicked: false
   },
   methods: {
