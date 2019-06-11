@@ -74,25 +74,13 @@ function initMap(ulurus) {
     app.clickedTitle = marker.get('title');
     app.clickedType = marker.get('store_type');
     app.markerIsClicked = true;
-    document.getElementById( 'code' ).scrollIntoView();
+    //document.getElementById( 'code' ).scrollIntoView();
 
   });
-  function addInfoWindow(marker, message) {
-
-var infoWindow = new google.maps.InfoWindow({
-    content: message 
-});
-
-    infoWindow.open(map, marker);
-
-  };
+  
  
 }
-  /*
-  var infowindow = new google.maps.InfoWindow({
-    
-      content: marker.get('store_code')
-    });*/
+
 };
  
 
@@ -142,7 +130,6 @@ var infoWindow = new google.maps.InfoWindow({
     ulurus[rowCounter].push(i);
     rowCounter++;
    }
-   print(ulurus);
    
 
    initMap(ulurus);
